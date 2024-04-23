@@ -45,7 +45,7 @@ async def helper():
                             description=item['snippet']['description'],
                             publishedTime=item['snippet']['publishTime'],
                             channel=item['snippet']['channelTitle'],
-                            thumbnail=item['snippet']['thumbnails']['default']['url']
+                            thumbnail=item['snippet']['thumbnails']['high']['url']
                         ))
                 
                 transaction.commit()  # Commit after all inserts
