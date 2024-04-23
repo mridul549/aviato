@@ -4,14 +4,17 @@ from models.index import videos
 from schemas.index import Video
 import os
 import httpx
+from dotenv import load_dotenv
+load_dotenv()
 
 async def fetchVideos():
     while True:
         await helper()
-        await asyncio.sleep(1000)
+        await asyncio.sleep(5)
 
 async def helper():
     transaction = conn.begin()  # Start transaction
+
     try:
         params = {
             'part': 'snippet',
@@ -19,9 +22,9 @@ async def helper():
             'type': 'video',
             'order': 'date',
             'maxResults': 20,
-            'key': "AIzaSyBb1ERlTO9MFo_THiJCiU8gI4rhy8MkGCg"
+            'key': os.getenv("GOOGLE_API_KEY")
         }
-        
+
         async with httpx.AsyncClient() as client:
             response = await client.get('https://www.googleapis.com/youtube/v3/search', params=params)
 
