@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
-from routes.index import video
+from routes.index import video, key
 from service.youtube import fetchVideos
 
 @asynccontextmanager
@@ -32,3 +32,4 @@ app.add_middleware(
 )
 
 app.include_router(video)
+app.include_router(key)

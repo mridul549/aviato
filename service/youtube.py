@@ -1,7 +1,7 @@
 import asyncio
 from config.db import conn
-from models.index import videos
-from schemas.index import Video
+from models.index import videos, keys
+from schemas.index import Video, Key
 import os
 import httpx
 from dotenv import load_dotenv
@@ -10,47 +10,51 @@ load_dotenv()
 async def fetchVideos():
     while True:
         await helper()
-        await asyncio.sleep(100000)
+        await asyncio.sleep(10000)
 
 async def helper():
     transaction = conn.begin()  # Start transaction
 
     try:
-        params = {
-            'part': 'snippet',
-            'q': 'cricket',
-            'type': 'video',
-            'order': 'date',
-            'maxResults': 50,
-            'publishedAfter': '2023-04-20T00:00:00Z', # published after Thu Apr 20 2023 05:30:00 GMT+0530
-            'key': os.getenv("GOOGLE_API_KEY")
-        }
+        apikeys = conn.execute(keys.select()).fetchall()
 
-        async with httpx.AsyncClient() as client:
-            response = await client.get('https://www.googleapis.com/youtube/v3/search', params=params)
+        for key in apikeys:
+            params = {
+                'part': 'snippet',
+                'q': 'cricket',
+                'type': 'video',
+                'order': 'date',
+                'maxResults': 50,
+                'publishedAfter': '2023-04-20T00:00:00Z', # published after Thu Apr 20 2023 05:30:00 GMT+0530
+                'key': key[1]
+            }
 
-            if response.status_code == 200:
-                data = response.json()
-                for item in data.get('items', []):
-                    video_id = item['id']['videoId']
+            async with httpx.AsyncClient() as client:
+                response = await client.get('https://www.googleapis.com/youtube/v3/search', params=params)
 
-                    # Check if video already exists in the database
-                    existing_video = conn.execute(videos.select().where(videos.c.videoid == video_id)).fetchone()
+                if response.status_code == 200:
+                    data = response.json()
+                    for item in data.get('items', []):
+                        video_id = item['id']['videoId']
+
+                        # Check if video already exists in the database
+                        existing_video = conn.execute(videos.select().where(videos.c.videoid == video_id)).fetchone()
+                        
+                        if not existing_video:
+                            # Insert new video into database
+                            conn.execute(videos.insert().values(
+                                videoid=video_id,
+                                title=item['snippet']['title'],
+                                description=item['snippet']['description'],
+                                publishedTime=item['snippet']['publishTime'],
+                                channel=item['snippet']['channelTitle'],
+                                thumbnail=item['snippet']['thumbnails']['high']['url']
+                            ))
                     
-                    if not existing_video:
-                        # Insert new video into database
-                        conn.execute(videos.insert().values(
-                            videoid=video_id,
-                            title=item['snippet']['title'],
-                            description=item['snippet']['description'],
-                            publishedTime=item['snippet']['publishTime'],
-                            channel=item['snippet']['channelTitle'],
-                            thumbnail=item['snippet']['thumbnails']['high']['url']
-                        ))
-                
-                transaction.commit()  # Commit after all inserts
-            else:
-                print(f"Failed to fetch data: {response.status_code}, {response.text}")
+                    transaction.commit()  # Commit after all inserts
+                    return
+                else:
+                    print(f"Failed to fetch data: {response.status_code}, {response.text}, using key {key[1]}")
                 
     except Exception as err:
         print(f"An error occurred: {err}")
