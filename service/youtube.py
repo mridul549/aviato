@@ -10,7 +10,7 @@ load_dotenv()
 async def fetchVideos():
     while True:
         await helper()
-        await asyncio.sleep(5)
+        await asyncio.sleep(100000)
 
 async def helper():
     transaction = conn.begin()  # Start transaction
@@ -22,6 +22,7 @@ async def helper():
             'type': 'video',
             'order': 'date',
             'maxResults': 20,
+            'publishedAfter': '2023-04-20T00:00:00Z', # published after Thu Apr 20 2023 05:30:00 GMT+0530
             'key': os.getenv("GOOGLE_API_KEY")
         }
 

@@ -1,12 +1,20 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from routes.index import video
 import asyncio
+from routes.index import video
 from service.youtube import fetchVideos
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(fetchVideos())
+    try:
+        yield  
+    finally:
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass  
 
+app = FastAPI(lifespan=lifespan)
 app.include_router(video)
-
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(fetchVideos())

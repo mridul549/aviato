@@ -10,6 +10,7 @@ videos = Table(
     Column('channel', String(255)),
     Column('publishedTime', String(255)), 
     Column('thumbnail', String(2048)),
+    
     # Adding an index to the publishedTime column
     Index('idx_published_time', 'publishedTime')
 )
