@@ -21,7 +21,7 @@ async def helper():
             'q': 'cricket',
             'type': 'video',
             'order': 'date',
-            'maxResults': 20,
+            'maxResults': 50,
             'publishedAfter': '2023-04-20T00:00:00Z', # published after Thu Apr 20 2023 05:30:00 GMT+0530
             'key': os.getenv("GOOGLE_API_KEY")
         }
