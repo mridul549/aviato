@@ -50,8 +50,9 @@ This project involves creating an API to fetch the latest videos from YouTube fo
 - Provides a UI to view, filter, sort the stored videos, add and view the API keys.
 - The dashboard is developed with React.js.
 
-## Screenshots
+## Demo and Screenshots
 
+#### Screenshot
 - Overview of the dashboard
 <img width="776" alt="Screenshot 2024-04-24 at 10 51 18 AM" src="https://github.com/mridul549/aviato/assets/94969636/8a15d0c9-577b-435a-9bae-68dfd183d568">
 
@@ -66,6 +67,9 @@ This project involves creating an API to fetch the latest videos from YouTube fo
 
 - Add and view API Keys
 <img width="776" alt="Screenshot 2024-04-24 at 10 52 21 AM" src="https://github.com/mridul549/aviato/assets/94969636/8a7b465c-778f-4844-b74e-75546515797d">
+
+#### Demo
+Check the demo [here](https://drive.google.com/file/d/1Dz5nFk7gV0OyEDS948bJvTcFo4x7npGg/view?usp=sharing)
 
 ## Installation
 
