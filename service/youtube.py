@@ -10,7 +10,7 @@ load_dotenv()
 async def fetchVideos():
     while True:
         await helper()
-        await asyncio.sleep(10000)
+        await asyncio.sleep(1000)
 
 async def helper():
     transaction = conn.begin()  # Start transaction
@@ -28,6 +28,8 @@ async def helper():
                 'publishedAfter': '2023-04-20T00:00:00Z', # published after Thu Apr 20 2023 05:30:00 GMT+0530
                 'key': key[1]
             }
+            
+            currentStatus = key[2]
 
             async with httpx.AsyncClient() as client:
                 response = await client.get('https://www.googleapis.com/youtube/v3/search', params=params)
@@ -49,16 +51,21 @@ async def helper():
                                 publishedTime=item['snippet']['publishTime'],
                                 channel=item['snippet']['channelTitle'],
                                 thumbnail=item['snippet']['thumbnails']['high']['url']
-                            ))
+                            ))  
+                    if currentStatus == 0:
+                        conn.execute(keys.update().values(
+                            active=True
+                        ).where(keys.c.keyValue == key[1]))
                     
-                    transaction.commit()  # Commit after all inserts
-                    return
+                    transaction.commit()
+
                 else:
-                    print(f"Failed to fetch data: {response.status_code}, {response.text}, using key {key[1]}")
-                
+                    if currentStatus == 1:
+                        conn.execute(keys.update().values(
+                            active=False
+                        ).where(keys.c.keyValue == key[1]))
+                        transaction.commit()
+
     except Exception as err:
         print(f"An error occurred: {err}")
         transaction.rollback()  
-    finally:
-        if not transaction.is_active:
-            transaction.close()  
