@@ -53,13 +53,19 @@ This project involves creating an API to fetch the latest videos from YouTube fo
 ## Screenshots
 
 - Overview of the dashboard
+<img width="776" alt="Screenshot 2024-04-24 at 10 51 18 AM" src="https://github.com/mridul549/aviato/assets/94969636/8a15d0c9-577b-435a-9bae-68dfd183d568">
 
 - Pagination
+<img width="776" alt="Screenshot 2024-04-24 at 10 51 28 AM" src="https://github.com/mridul549/aviato/assets/94969636/c2015454-76ef-4177-889c-77d5e716d63a">
+
 - Change the page size
+<img width="365" alt="Screenshot 2024-04-24 at 10 51 58 AM" src="https://github.com/mridul549/aviato/assets/94969636/deba0edb-0988-45d1-bedf-6b19e5bcd77b">
 
 - Sort videos by published time
+<img width="260" alt="Screenshot 2024-04-24 at 10 52 10 AM" src="https://github.com/mridul549/aviato/assets/94969636/674b2a28-86fe-4a66-94f3-300d4380b899">
 
 - Add and view API Keys
+<img width="776" alt="Screenshot 2024-04-24 at 10 52 21 AM" src="https://github.com/mridul549/aviato/assets/94969636/8a7b465c-778f-4844-b74e-75546515797d">
 
 ## Installation
 
